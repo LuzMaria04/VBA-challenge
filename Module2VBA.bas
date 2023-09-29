@@ -11,7 +11,7 @@ Sub StockPart1():
         'Start row of ticker block
         Dim j As Long
         'Index counter to fill Ticker row
-        Dim TickCount As Long
+        Dim Ticker As Long
         'Last row column A
         Dim LastRowA As Long
         'last row column I
@@ -39,8 +39,8 @@ Sub StockPart1():
         ws.Cells(3, 15).Value = "Greatest % Decrease"
         ws.Cells(4, 15).Value = "Greatest Total Volume"
         
-        'Set Ticker Counter to first row
-        TickCount = 2
+        'Set Ticker to first row
+        Ticker = 2
         
         'Set start row to 2
         j = 2
@@ -56,21 +56,21 @@ Sub StockPart1():
                 If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
                 
                 'Write ticker in column I (#9)
-                ws.Cells(TickCount, 9).Value = ws.Cells(i, 1).Value
+                ws.Cells(Ticker, 9).Value = ws.Cells(i, 1).Value
                 
                 'Calculate and write Yearly Change in column J (#10)
-                ws.Cells(TickCount, 10).Value = ws.Cells(i, 6).Value - ws.Cells(j, 3).Value
+                ws.Cells(Ticker, 10).Value = ws.Cells(i, 6).Value - ws.Cells(j, 3).Value
                 
                     'Conditional formating
-                    If ws.Cells(TickCount, 10).Value < 0 Then
+                    If ws.Cells(Ticker, 10).Value < 0 Then
                 
                     'Set cell background color to red
-                    ws.Cells(TickCount, 10).Interior.ColorIndex = 3
+                    ws.Cells(Ticker, 10).Interior.ColorIndex = 3
                 
                     Else
                 
                     'Set cell background color to green
-                    ws.Cells(TickCount, 10).Interior.ColorIndex = 4
+                    ws.Cells(Ticker, 10).Interior.ColorIndex = 4
                 
                     End If
                     
@@ -79,19 +79,19 @@ Sub StockPart1():
                     PerChange = ((ws.Cells(i, 6).Value - ws.Cells(j, 3).Value) / ws.Cells(j, 3).Value)
                     
                     'Percent formating
-                    ws.Cells(TickCount, 11).Value = Format(PerChange, "Percent")
+                    ws.Cells(Ticker, 11).Value = Format(PerChange, "Percent")
                     
                     Else
                     
-                    ws.Cells(TickCount, 11).Value = Format(0, "Percent")
+                    ws.Cells(Ticker, 11).Value = Format(0, "Percent")
                     
                     End If
                     
                 'Calculate and write total volume in column L (#12)
-                ws.Cells(TickCount, 12).Value = WorksheetFunction.Sum(Range(ws.Cells(j, 7), ws.Cells(i, 7)))
+                ws.Cells(Ticker, 12).Value = WorksheetFunction.Sum(Range(ws.Cells(j, 7), ws.Cells(i, 7)))
                 
-                'Increase TickCount by 1
-                TickCount = TickCount + 1
+                'Increase Ticker by 1
+                Ticker = Ticker + 1
                 
                 'Set new start row of the ticker block
                 j = i + 1
@@ -105,56 +105,55 @@ Sub StockPart1():
         'MsgBox ("Last row in column I is " & LastRowI)
         
         'Prepare for summary
-        GreatVol = ws.Cells(2, 12).Value
-        GreatIncr = ws.Cells(2, 11).Value
-        GreatDecr = ws.Cells(2, 11).Value
+        GreatVolume = ws.Cells(2, 12).Value
+        GreatIncrease = ws.Cells(2, 11).Value
+        GreatDecrease = ws.Cells(2, 11).Value
         
             'Loop for summary
             For i = 2 To LastRowI
             
-                'For greatest total volume--check if next value is larger--if yes take over a new value and populate ws.Cells
-                If ws.Cells(i, 12).Value > GreatVol Then
-                GreatVol = ws.Cells(i, 12).Value
+                'For greatest total volume
+                If ws.Cells(i, 12).Value > GreatVolume Then
+                GreatVolume = ws.Cells(i, 12).Value
                 ws.Cells(4, 16).Value = ws.Cells(i, 9).Value
                 
                 Else
                 
-                GreatVol = GreatVol
+                GreatVolume = GreatVolume
                 
                 End If
                 
-                'For greatest increase--check if next value is larger--if yes take over a new value and populate ws.Cells
-                If ws.Cells(i, 11).Value > GreatIncr Then
-                GreatIncr = ws.Cells(i, 11).Value
+                'For greatest increase
+                If ws.Cells(i, 11).Value > GreatIncrease Then
+                GreatIncrease = ws.Cells(i, 11).Value
                 ws.Cells(2, 16).Value = ws.Cells(i, 9).Value
                 
                 Else
                 
-                GreatIncr = GreatIncr
+                GreatIncrease = GreatIncrease
                 
                 End If
                 
-                'For greatest decrease--check if next value is smaller--if yes take over a new value and populate ws.Cells
-                If ws.Cells(i, 11).Value < GreatDecr Then
-                GreatDecr = ws.Cells(i, 11).Value
+                'For greatest decrease
+                If ws.Cells(i, 11).Value < GreatDecrease Then
+                GreatDecrease = ws.Cells(i, 11).Value
                 ws.Cells(3, 16).Value = ws.Cells(i, 9).Value
                 
                 Else
                 
-                GreatDecr = GreatDecr
+                GreatDecrease = GreatDecrease
                 
                 End If
                 
             'Write summary results in ws.Cells
-            ws.Cells(2, 17).Value = Format(GreatIncr, "Percent")
-            ws.Cells(3, 17).Value = Format(GreatDecr, "Percent")
-            ws.Cells(4, 17).Value = Format(GreatVol, "Scientific")
+            ws.Cells(2, 17).Value = Format(GreatIncrease, "Percent")
+            ws.Cells(3, 17).Value = Format(GreatDecrease, "Percent")
+            ws.Cells(4, 17).Value = Format(GreatVolume, "Scientific")
             
-            Next i
+         Next i
             
-        'Djust column width automatically
-        Worksheets(WorksheetName).Columns("A:Z").AutoFit
+    
             
     Next ws
-        
 End Sub
+
